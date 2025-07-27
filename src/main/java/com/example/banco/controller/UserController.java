@@ -19,40 +19,38 @@ import com.example.banco.service.UserService;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-  private final UserService service;
+    private final UserService service;
 
-  public UserController(UserService service) {
-    this.service = service;
-  }
+    public UserController(UserService service) {
+        this.service = service;
+    }
 
-  @GetMapping
-  public List<UserDTO> all() {
-    return service.findAll().stream()
-      .map(this::toDto)
-      .collect(Collectors.toList());
-  }
+    @GetMapping
+    public List<UserDTO> all() {
+        return service.findAll().stream()
+            .map(this::toDto)
+            .collect(Collectors.toList());
+    }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<UserDTO> getOne(@PathVariable Long id) {
-    return service.findById(id)
-      .map(u -> ResponseEntity.ok(toDto(u)))
-      .orElse(ResponseEntity.notFound().build());
-  }
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getOne(@PathVariable Long id) {
+        User user = service.findById(id); // Agora sempre retorna ou lança exceção
+        return ResponseEntity.ok(toDto(user));
+    }
 
-  @PostMapping
-  public ResponseEntity<UserDTO> create(@RequestBody User user){
-    User saved = service.save(user);
-    return ResponseEntity.status(HttpStatus.CREATED).body(toDto(saved));
-  }
+    @PostMapping
+    public ResponseEntity<UserDTO> create(@RequestBody User user) {
+        User saved = service.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toDto(saved));
+    }
 
-  private UserDTO toDto(User u){
-    UserDTO dto = new UserDTO();
-    dto.setName(u.getName());
-    dto.setAccountNumber(u.getAccount().getNumber());
-    dto.setAgency(u.getAccount().getAgency());
-    dto.setBalance(u.getAccount().getBalance());
-    dto.setLimit(u.getAccount().getLimit());
-    return dto;
-  }
+    private UserDTO toDto(User u) {
+        UserDTO dto = new UserDTO();
+        dto.setName(u.getName());
+        dto.setAccountNumber(u.getAccount().getNumber());
+        dto.setAgency(u.getAccount().getAgency());
+        dto.setBalance(u.getAccount().getBalance());
+        dto.setLimit(u.getAccount().getLimit());
+        return dto;
+    }
 }
-

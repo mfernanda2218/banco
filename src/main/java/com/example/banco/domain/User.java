@@ -80,5 +80,10 @@ public class User {
         this.news = news;
     }
 
+    public Object map(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'map'");
+    }
+
 }
 
